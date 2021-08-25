@@ -1,1 +1,7 @@
-/* Styles go here */
+input::-webkit-input-placeholder {
+    font-size: 1rem;
+  }
+  
+  input[type="color"]:hover {
+    cursor: pointer;
+  }
