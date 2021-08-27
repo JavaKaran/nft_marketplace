@@ -117,26 +117,18 @@ class App extends Component {
         );
         this.setState({ cryptoBoysContract });
         this.setState({ contractDetected: true });
-        const cryptoBoysCount = await cryptoBoysContract.methods
-          .cryptoBoyCounter()
-          .call();
+        const cryptoBoysCount = await cryptoBoysContract.methods.cryptoBoysCounter().call();
         this.setState({ cryptoBoysCount });
         for (var i = 1; i <= cryptoBoysCount; i++) {
-          const cryptoBoy = await cryptoBoysContract.methods
-            .allCryptoBoys(i)
-            .call();
+          const cryptoBoy = await cryptoBoysContract.methods.allCryptoBoys(i).call();
           this.setState({
             cryptoBoys: [...this.state.cryptoBoys, cryptoBoy],
           });
         }
-        let totalTokensMinted = await cryptoBoysContract.methods
-          .getNumberOfTokensMinted()
-          .call();
+        let totalTokensMinted = await cryptoBoysContract.methods.getNumberOfTokensMinted().call();
         totalTokensMinted = totalTokensMinted.toNumber();
         this.setState({ totalTokensMinted });
-        let totalTokensOwnedByAccount = await cryptoBoysContract.methods
-          .getTotalNumberOfTokensOwnedByAnAddress(this.state.accountAddress)
-          .call();
+        let totalTokensOwnedByAccount = await cryptoBoysContract.methods.getTotalNumberOfTokensOwnedByAnAddress(this.state.accountAddress).call();
         totalTokensOwnedByAccount = totalTokensOwnedByAccount.toNumber();
         this.setState({ totalTokensOwnedByAccount });
         this.setState({ loading: false });
@@ -161,9 +153,9 @@ class App extends Component {
           cryptoBoys: this.state.cryptoBoys.map((cryptoboy) =>
             cryptoboy.tokenId.toNumber() === Number(metaData.tokenId)
               ? {
-                  ...cryptoboy,
-                  metaData,
-                }
+                ...cryptoboy,
+                metaData,
+              }
               : cryptoboy
           ),
         });
@@ -177,9 +169,7 @@ class App extends Component {
     let colorsUsed = [];
     for (let i = 0; i < colorsArray.length; i++) {
       if (colorsArray[i] !== "") {
-        let colorIsUsed = await this.state.cryptoBoysContract.methods
-          .colorExists(colorsArray[i])
-          .call();
+        let colorIsUsed = await this.state.cryptoBoysContract.methods.colorExists(colorsArray[i]).call();
         if (colorIsUsed) {
           colorsUsed = [...colorsUsed, colorsArray[i]];
         } else {
@@ -187,9 +177,7 @@ class App extends Component {
         }
       }
     }
-    const nameIsUsed = await this.state.cryptoBoysContract.methods
-      .tokenNameExists(name)
-      .call();
+    const nameIsUsed = await this.state.cryptoBoysContract.methods.tokenNameExists(name).call();
     if (colorsUsed.length === 0 && !nameIsUsed) {
       const {
         cardBorderColor,
@@ -209,9 +197,7 @@ class App extends Component {
         bodyBorderColor,
       } = colors;
       let previousTokenId;
-      previousTokenId = await this.state.cryptoBoysContract.methods
-        .cryptoBoyCounter()
-        .call();
+      previousTokenId = await this.state.cryptoBoysContract.methods.cryptoBoysCounter().call();
       previousTokenId = previousTokenId.toNumber();
       const tokenId = previousTokenId + 1;
       const tokenObject = {
@@ -244,7 +230,7 @@ class App extends Component {
       let tokenURI = `https://ipfs.infura.io/ipfs/${cid.path}`;
       const price = window.web3.utils.toWei(tokenPrice.toString(), "Ether");
       this.state.cryptoBoysContract.methods
-        .mintCryptoBoy(name, tokenURI, price, colorsArray)
+        .mintCryptoBoys(name, tokenURI, price, colorsArray)
         .send({ from: this.state.accountAddress })
         .on("confirmation", () => {
           localStorage.setItem(this.state.accountAddress, new Date().getTime());
